@@ -1,0 +1,49 @@
+# The name of our workflow that will appear in the Actions tab
+name: Build Flutter APK
+
+# This tells GitHub WHEN to run the build.
+# 'workflow_dispatch' adds a manual "Run" button so you can trigger it anytime!
+on:
+  workflow_dispatch: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    # We are requesting a standard Ubuntu Linux server to run our build
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Download your repository's code onto the virtual server
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Java (Required for Android builds)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # Step 3: Install the Flutter SDK 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      # Step 4: Download all the Flutter packages your app needs
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Step 5: Compile the app into a release APK!
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Step 6: Take the finished APK and upload it so you can download it to your phone
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-flutter-app
+          path: build/app/outputs/flutter-apk/app-release.apk
+          
