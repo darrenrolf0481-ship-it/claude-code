@@ -26,11 +26,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      # Step 3: Install the Flutter SDK 
+            # Step 3: Install the Flutter SDK 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          channel: 'stable'
 
       # Step 4: Download all the Flutter packages your app needs
       - name: Install Dependencies
